@@ -7,11 +7,11 @@
 
 import Foundation
 
-class MainViewModel {
+class HomeViewModel {
     var cities: [City] = []
     let url = URL(string: "https://6563bf93ceac41c0761d1430.mockapi.io/api/Cities")
 
-    func decodeJson() {
+    func loadData() {
         guard let jsonURL = url else { return }
         URLSession.shared.dataTask(with: jsonURL) { data, urlResponse, error in
             guard let data = data, error == nil, urlResponse != nil else {

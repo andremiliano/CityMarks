@@ -7,13 +7,12 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+class HomeViewController: UIViewController {
 
-    @IBOutlet weak var tableView: UITableView!
+    let tableView = UITableView()
+    var viewModel: HomeViewModel?
 
-    var viewModel: MainViewModel?
-
-    convenience init(viewModel: MainViewModel) {
+    convenience init(viewModel: HomeViewModel) {
         self.init()
         self.viewModel = viewModel
     }
@@ -21,22 +20,28 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setUp()
+        self.setupTableView()
     }
 
     private func setUp() {
-        navigationController?.isNavigationBarHidden = false
         self.title = "City Marks"
-        self.setupTableView()
-        self.viewModel?.decodeJson()
+        self.viewModel?.loadData()
     }
 
     private func setupTableView() {
         self.tableView.dataSource = self
         self.tableView.register(UINib(nibName: "MarksTableViewCell", bundle: nil), forCellReuseIdentifier: "ReusableTableCell")
+
+        view.addSubview(tableView)
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.tableView.topAnchor.constraint(equalTo:view.topAnchor).isActive = true
+        self.tableView.leftAnchor.constraint(equalTo:view.leftAnchor).isActive = true
+        self.tableView.rightAnchor.constraint(equalTo:view.rightAnchor).isActive = true
+        self.tableView.bottomAnchor.constraint(equalTo:view.bottomAnchor).isActive = true
     }
 }
 
-extension MainViewController: UITableViewDataSource {
+extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 3
     }
