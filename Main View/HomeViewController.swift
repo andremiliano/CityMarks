@@ -9,8 +9,8 @@ import UIKit
 
 class HomeViewController: UIViewController {
 
-    let tableView = UITableView()
     var viewModel: HomeViewModel?
+    private let tableView = UITableView()
 
     convenience init(viewModel: HomeViewModel) {
         self.init()
@@ -25,11 +25,16 @@ class HomeViewController: UIViewController {
 
     private func setUp() {
         self.title = "City Marks"
-        self.viewModel?.loadData()
+        self.viewModel?.getMarks {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
 
     private func setupTableView() {
         self.tableView.dataSource = self
+        self.tableView.delegate = self
         self.tableView.register(UINib(nibName: "MarksTableViewCell", bundle: nil), forCellReuseIdentifier: "ReusableTableCell")
 
         view.addSubview(tableView)
@@ -46,9 +51,22 @@ extension HomeViewController: UITableViewDataSource {
         return 3
     }
 
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = HeaderView()
+        header.cities = self.viewModel?.cities
+
+        return header
+    }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ReusableTableCell", for: indexPath) as! MarksTableViewCell
         cell.cityLabel.text = "Location"
         return cell
+    }
+}
+
+extension HomeViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Open individual Mark screen
     }
 }
