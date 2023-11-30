@@ -8,8 +8,9 @@
 import UIKit
 
 class TabBarViewController: UITabBarController {
-    var subViewControllers: [UINavigationController] = []
-    let homeViewModel = HomeViewModel()
+    private var subViewControllers: [UINavigationController] = []
+    private let homeViewModel = HomeViewModel()
+    private let mapViewModel = MapViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,11 +20,19 @@ class TabBarViewController: UITabBarController {
     private func setUpTab() {
         let homeViewController = HomeViewController(viewModel: self.homeViewModel)
         let homeNavigationController = UINavigationController(rootViewController: homeViewController)
+        let mapViewController = MapViewController(viewModel: self.mapViewModel)
+        let mapNavigationController = UINavigationController(rootViewController: mapViewController)
+
         self.subViewControllers.append(homeNavigationController)
+        self.subViewControllers.append(mapNavigationController)
 
         homeNavigationController.tabBarItem = UITabBarItem(title: "Home",
-                                         image: UIImage(systemName: "house.fill"),
-                                         tag: 0)
+                                                           image: UIImage(systemName: "house"),
+                                                           selectedImage: UIImage(systemName: "house.fill"))
+        
+        mapNavigationController.tabBarItem = UITabBarItem(title: "Map",
+                                                          image: UIImage(systemName: "mappin.circle"),
+                                                          selectedImage: UIImage(systemName: "mappin.circle.fill"))
 
         self.setViewControllers(subViewControllers, animated: true)
         self.selectedViewController = homeNavigationController

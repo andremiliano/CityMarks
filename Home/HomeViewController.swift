@@ -43,7 +43,6 @@ class HomeViewController: UIViewController {
                                           style: .default))
 
             self.present(alert, animated: true, completion: nil)
-            print(error.localizedDescription)
         }
 
         self.viewModel?.onSuccess = { cities in
