@@ -7,26 +7,28 @@
 
 import Foundation
 
-class HomeViewModel {
-    var cities: [City] = []
-    let url = URL(string: "https://6563bf93ceac41c0761d1430.mockapi.io/api/Cities")
+class HomeViewModel: NSObject {
+    private var apiService : APIService!
+    var onSuccess : (([City]) -> Void)?
+    var onErrorHandling : ((Error) -> Void)?
 
-    func getMarks(completion: @escaping () -> Void) {
-        guard let jsonURL = url else { return }
-        URLSession.shared.dataTask(with: jsonURL) { data, urlResponse, error in
-            guard let data = data, error == nil, urlResponse != nil else {
-                print("Something is Wrong")
-                return
+    override init() {
+        super.init()
+        self.apiService = APIService()
+    }
+
+    func getCitiesData() {
+        self.apiService.getCityMarks { [weak self] result in
+            switch result {
+            case .success(let cities):
+                DispatchQueue.main.async {
+                    self?.onSuccess?(cities)
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self?.onErrorHandling?(error)
+                }
             }
-            do
-            {
-                let decoder = JSONDecoder()
-                let cities = try decoder.decode([City].self, from: data)
-                self.cities = cities
-                print(self.cities)
-            } catch {
-                print(error)
-            }
-        }.resume()
+        }
     }
 }

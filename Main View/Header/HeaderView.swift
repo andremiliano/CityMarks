@@ -8,38 +8,34 @@
 import UIKit
 import Foundation
 
-class HeaderView: UIView {
+//TODO: Make delegate for when button is clicked
+
+class HeaderView: UITableViewHeaderFooterView {
+
     var cities: [City]? {
         didSet {
-            self.createButtons()
-            self.createStackView()
-        }
-    }
-    private var buttonArray: [UIButton]? = []
-
-    private func createButtons() {
-        self.cities?.forEach { city in
-            let button = UIButton(type: .system)
-            button.setTitle(city.name, for: .normal)
-            button.setTitleColor( UIColor.white, for: .normal)
-            self.buttonArray?.append(button)
+            //self.createStackView()
+            if let cityNames = cities.flatMap({ $0.map { $0.name }}) {
+                self.segmentedControl(cityNames: cityNames)
+            }
         }
     }
 
-    private func createStackView() {
-        let stackView = UIStackView(arrangedSubviews: buttonArray ?? [])
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        stackView.alignment = .fill
-        stackView.spacing = 10
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(stackView)
+    private func segmentedControl(cityNames: [String]) {
+        let customSC = UISegmentedControl(items: cityNames)
+        customSC.selectedSegmentIndex = 0
+        customSC.layer.cornerRadius = 0
+        customSC.tintColor = .black
+
+        //TODO: Add target to segment
+        customSC.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(customSC)
 
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: self.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            customSC.topAnchor.constraint(equalTo: self.topAnchor),
+            customSC.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            customSC.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            customSC.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
 }
