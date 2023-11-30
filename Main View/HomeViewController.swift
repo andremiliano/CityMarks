@@ -60,6 +60,8 @@ class HomeViewController: UIViewController {
         self.tableView.register(UINib(nibName: "HeaderView", bundle: nil), forHeaderFooterViewReuseIdentifier: "HeaderView")
         self.tableView.register(UINib(nibName: "MarksTableViewCell", bundle: nil), forCellReuseIdentifier: "ReusableTableCell")
 
+        self.tableView.separatorStyle = .none
+
         view.addSubview(tableView)
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
         self.tableView.topAnchor.constraint(equalTo:view.topAnchor).isActive = true

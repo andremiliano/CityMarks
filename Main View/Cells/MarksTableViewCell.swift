@@ -21,24 +21,25 @@ class MarksTableViewCell: UITableViewCell {
 
     @IBOutlet weak var markImageView: UIImageView!
     @IBOutlet weak var markLabel: UILabel!
+    @IBOutlet weak var errorLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
     }
 
     private func load(url: URL) {
-        let task = URLSession.shared.dataTask(with: url) { [weak self] (data, response, error) in
+        let task = URLSession.shared.dataTask(with: url) { [weak self] (data, response, _) in
             guard let self = self else { return }
-
-            if let error = error {
-                print(error)
-                return
-            }
 
             if let data = data {
                 DispatchQueue.main.async {
                     self.markImageView.image = UIImage(data: data)
                 }
+            } else {
+                self.markImageView.isHidden = true
+                self.errorLabel.isHidden = false
+                self.errorLabel.text = "Sorry,There was an error loading the image"
+                return
             }
         }
         task.resume()

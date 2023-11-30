@@ -26,21 +26,31 @@
                                     <constraint firstAttribute="height" constant="200" id="LVP-hv-TXT"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0kr-Y0-BFD">
-                                <rect key="frame" x="8" y="216" width="304" height="39"/>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Snv-Aq-fYJ">
+                                <rect key="frame" x="25" y="25" width="270" height="20.333333333333329"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0kr-Y0-BFD">
+                                <rect key="frame" x="8" y="216" width="304" height="39"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Snv-Aq-fYJ" secondAttribute="trailing" constant="25" id="0Mn-q4-wvi"/>
                             <constraint firstAttribute="trailing" secondItem="0kr-Y0-BFD" secondAttribute="trailing" constant="8" id="6o2-Il-6dU"/>
                             <constraint firstItem="JFY-kG-LKb" firstAttribute="top" secondItem="OOT-7t-cOl" secondAttribute="top" constant="8" id="9lk-O7-p59"/>
+                            <constraint firstItem="0kr-Y0-BFD" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Snv-Aq-fYJ" secondAttribute="bottom" constant="50" id="Ck4-Rm-fXJ"/>
+                            <constraint firstItem="Snv-Aq-fYJ" firstAttribute="leading" secondItem="OOT-7t-cOl" secondAttribute="leading" constant="25" id="GDe-r5-ARL"/>
                             <constraint firstItem="JFY-kG-LKb" firstAttribute="leading" secondItem="OOT-7t-cOl" secondAttribute="leading" id="QOV-bi-ths"/>
                             <constraint firstAttribute="trailing" secondItem="JFY-kG-LKb" secondAttribute="trailing" id="ThZ-b8-xGW"/>
                             <constraint firstAttribute="bottom" secondItem="0kr-Y0-BFD" secondAttribute="bottom" constant="8" id="Ty7-JZ-PzU"/>
                             <constraint firstItem="0kr-Y0-BFD" firstAttribute="leading" secondItem="OOT-7t-cOl" secondAttribute="leading" constant="8" id="XFJ-Nq-gZM"/>
+                            <constraint firstItem="Snv-Aq-fYJ" firstAttribute="top" secondItem="OOT-7t-cOl" secondAttribute="top" constant="25" id="jdg-54-hrH"/>
                             <constraint firstItem="0kr-Y0-BFD" firstAttribute="top" secondItem="JFY-kG-LKb" secondAttribute="bottom" constant="8" id="sED-Rr-uAM"/>
                         </constraints>
                     </view>
@@ -54,6 +64,7 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="errorLabel" destination="Snv-Aq-fYJ" id="cPl-pa-b31"/>
                 <outlet property="markImageView" destination="JFY-kG-LKb" id="b1i-fk-y7L"/>
                 <outlet property="markLabel" destination="0kr-Y0-BFD" id="1YE-DA-mmK"/>
             </connections>
