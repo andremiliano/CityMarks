@@ -23,6 +23,7 @@ struct Mark: Decodable {
     let description: String
 }
 
+// Used for the map setup in SwiftUI
 struct MarkLocation: Identifiable {
     let id = UUID()
     let name: String

@@ -34,6 +34,8 @@ class HeaderView: UITableViewHeaderFooterView {
 
     private func segmentedControl(cityNames: [String]) {
 
+        /// This is needed since the segmented control gets refreshed along with the tableview
+        /// it makes it only display the cities once otherwise it would duplicate them on each data reload
         if !isSCShown {
             for (index, cityName) in cityNames.enumerated() {
                 customSC.insertSegment(withTitle: cityName, at: index, animated: false)
