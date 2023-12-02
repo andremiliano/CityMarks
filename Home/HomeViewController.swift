@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import SwiftUI
 
 class HomeViewController: UIViewController {
 
     var viewModel: HomeViewModel?
     private let tableView = UITableView()
+    private var selectedCity: City?
     private var cities: [City]? {
         didSet {
             self.tableView.reloadData()
@@ -47,6 +49,7 @@ class HomeViewController: UIViewController {
 
         self.viewModel?.onSuccess = { cities in
             self.cities = cities
+            self.selectedCity = cities.first
         }
 
         self.viewModel?.getCitiesData()
@@ -70,9 +73,16 @@ class HomeViewController: UIViewController {
     }
 }
 
+extension HomeViewController: HeaderViewDelegate {
+    func updateSelectedCity(city: City?) {
+        self.selectedCity = city
+        self.tableView.reloadData()
+    }
+}
+
 extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.cities?.first?.marks.count ?? 0
+        return self.selectedCity?.marks.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -81,6 +91,7 @@ extension HomeViewController: UITableViewDataSource {
         }
 
         headerView.cities = self.cities
+        headerView.delegate = self
         return headerView
     }
 
@@ -89,14 +100,17 @@ extension HomeViewController: UITableViewDataSource {
             return UITableViewCell()
         }
 
-        //TODO: Update the city that is sent depending on whats selected on the header
-        cell.mark = self.cities?.first?.marks[indexPath.row]
+        cell.mark = self.selectedCity?.marks[indexPath.row]
         return cell
     }
 }
 
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //TODO: Open individual Mark screen with SwiftUI
+        let markUIView = MarkUIView(cityName: self.cities?.first?.name ?? "",
+                                    countryName: self.cities?.first?.country ?? "",
+                                    mark: (self.cities?.first?.marks[indexPath.row])!)
+        let hostingController = UIHostingController(rootView: markUIView)
+        present(hostingController, animated: true, completion: nil)
     }
 }

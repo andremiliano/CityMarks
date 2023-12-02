@@ -8,29 +8,48 @@
 import UIKit
 import Foundation
 
-//TODO: Make delegate for when button is clicked
+protocol HeaderViewDelegate: AnyObject {
+    func updateSelectedCity(city: City?)
+}
 
 class HeaderView: UITableViewHeaderFooterView {
 
+    private let customSC: UISegmentedControl = {
+        let segmentedControl = UISegmentedControl(items: [])
+        segmentedControl.layer.cornerRadius = 0
+        segmentedControl.tintColor = .black
+        return segmentedControl
+    }()
+
+    private var isSCShown: Bool = false
+
     var cities: [City]? {
         didSet {
-            //self.createStackView()
             if let cityNames = cities.flatMap({ $0.map { $0.name }}) {
                 self.segmentedControl(cityNames: cityNames)
             }
         }
     }
 
-    private func segmentedControl(cityNames: [String]) {
-        let customSC = UISegmentedControl(items: cityNames)
-        customSC.selectedSegmentIndex = 0
-        customSC.layer.cornerRadius = 0
-        customSC.tintColor = .black
+    weak var delegate: HeaderViewDelegate?
 
-        //TODO: Add target to segment
+    private func segmentedControl(cityNames: [String]) {
+
+        if !isSCShown {
+            for (index, cityName) in cityNames.enumerated() {
+                customSC.insertSegment(withTitle: cityName, at: index, animated: false)
+            }
+
+            customSC.selectedSegmentIndex = 0
+            let selectedCity = customSC.titleForSegment(at: customSC.selectedSegmentIndex) ?? ""
+            self.selectCity(selectedCity)
+            isSCShown = true
+        }
+
+        customSC.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
+
         customSC.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(customSC)
-
         NSLayoutConstraint.activate([
             customSC.topAnchor.constraint(equalTo: self.topAnchor),
             customSC.leadingAnchor.constraint(equalTo: self.leadingAnchor),
@@ -38,4 +57,19 @@ class HeaderView: UITableViewHeaderFooterView {
             customSC.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
+
+    private func selectCity(_ cityName: String) {
+        let selectedCity = cities?.first(where: { $0.name == cityName })
+        delegate?.updateSelectedCity(city: selectedCity)
+    }
+
+    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+        let selectedIndex = sender.selectedSegmentIndex
+        guard selectedIndex != UISegmentedControl.noSegment else {
+            return
+        }
+
+        let cityName = sender.titleForSegment(at: selectedIndex) ?? ""
+        self.selectCity(cityName)
+        }
 }

@@ -18,6 +18,8 @@ class TabBarViewController: UITabBarController {
     }
 
     private func setUpTab() {
+        UITabBar.appearance().backgroundColor = .white
+        UITabBar.appearance().tintColor = .black
         let homeViewController = HomeViewController(viewModel: self.homeViewModel)
         let homeNavigationController = UINavigationController(rootViewController: homeViewController)
         let mapViewController = MapViewController(viewModel: self.mapViewModel)

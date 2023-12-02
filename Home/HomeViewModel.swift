@@ -8,7 +8,9 @@
 import Foundation
 
 class HomeViewModel: NSObject {
-    private var apiService : APIService!
+
+    private var apiService: APIService?
+
     var onSuccess : (([City]) -> Void)?
     var onErrorHandling : ((Error) -> Void)?
 
@@ -18,7 +20,11 @@ class HomeViewModel: NSObject {
     }
 
     func getCitiesData() {
-        self.apiService.getCityMarks { [weak self] result in
+        guard let apiService else {
+            return
+        }
+
+        apiService.getCityMarks { [weak self] result in
             switch result {
             case .success(let cities):
                 DispatchQueue.main.async {
