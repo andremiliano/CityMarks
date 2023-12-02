@@ -16,7 +16,7 @@ class HomeViewModel: NSObject {
 
     override init() {
         super.init()
-        self.apiService = APIService()
+        apiService = APIService()
     }
 
     func getCitiesData() {

@@ -15,7 +15,6 @@ class APIService: NSObject {
         guard let jsonURL = sourcesURL else { return }
         URLSession.shared.dataTask(with: jsonURL) { data, urlResponse, error in
             guard let data = data, error == nil, urlResponse != nil else {
-                print("Something is Wrong")
                 return
             }
             do

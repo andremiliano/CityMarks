@@ -14,19 +14,19 @@ class TabBarViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setUpTab()
+        setUpTab()
     }
 
     private func setUpTab() {
         UITabBar.appearance().backgroundColor = .white
         UITabBar.appearance().tintColor = .black
-        let homeViewController = HomeViewController(viewModel: self.homeViewModel)
+        let homeViewController = HomeViewController(viewModel: homeViewModel)
         let homeNavigationController = UINavigationController(rootViewController: homeViewController)
-        let mapViewController = MapViewController(viewModel: self.mapViewModel)
+        let mapViewController = MapViewController(viewModel: mapViewModel)
         let mapNavigationController = UINavigationController(rootViewController: mapViewController)
 
-        self.subViewControllers.append(homeNavigationController)
-        self.subViewControllers.append(mapNavigationController)
+        subViewControllers.append(homeNavigationController)
+        subViewControllers.append(mapNavigationController)
 
         homeNavigationController.tabBarItem = UITabBarItem(title: "Home",
                                                            image: UIImage(systemName: "house"),
@@ -36,8 +36,8 @@ class TabBarViewController: UITabBarController {
                                                           image: UIImage(systemName: "mappin.circle"),
                                                           selectedImage: UIImage(systemName: "mappin.circle.fill"))
 
-        self.setViewControllers(subViewControllers, animated: true)
-        self.selectedViewController = homeNavigationController
+        setViewControllers(subViewControllers, animated: true)
+        selectedViewController = homeNavigationController
     }
 }
 

@@ -16,7 +16,6 @@ class HeaderView: UITableViewHeaderFooterView {
 
     private let customSC: UISegmentedControl = {
         let segmentedControl = UISegmentedControl(items: [])
-        segmentedControl.layer.cornerRadius = 0
         segmentedControl.tintColor = .black
         return segmentedControl
     }()
@@ -26,7 +25,7 @@ class HeaderView: UITableViewHeaderFooterView {
     var cities: [City]? {
         didSet {
             if let cityNames = cities.flatMap({ $0.map { $0.name }}) {
-                self.segmentedControl(cityNames: cityNames)
+                segmentedControl(cityNames: cityNames)
             }
         }
     }
@@ -42,19 +41,19 @@ class HeaderView: UITableViewHeaderFooterView {
 
             customSC.selectedSegmentIndex = 0
             let selectedCity = customSC.titleForSegment(at: customSC.selectedSegmentIndex) ?? ""
-            self.selectCity(selectedCity)
+            selectCity(selectedCity)
             isSCShown = true
         }
 
         customSC.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
 
         customSC.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(customSC)
+        addSubview(customSC)
         NSLayoutConstraint.activate([
-            customSC.topAnchor.constraint(equalTo: self.topAnchor),
-            customSC.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            customSC.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            customSC.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            customSC.topAnchor.constraint(equalTo: topAnchor),
+            customSC.leadingAnchor.constraint(equalTo: leadingAnchor),
+            customSC.trailingAnchor.constraint(equalTo: trailingAnchor),
+            customSC.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 
@@ -70,6 +69,6 @@ class HeaderView: UITableViewHeaderFooterView {
         }
 
         let cityName = sender.titleForSegment(at: selectedIndex) ?? ""
-        self.selectCity(cityName)
+        selectCity(cityName)
         }
 }
