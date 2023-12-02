@@ -10,12 +10,14 @@ import SwiftUI
 
 class HomeViewController: UIViewController {
 
+    lazy var refreshControl = UIRefreshControl()
+
     var viewModel: HomeViewModel?
     private let tableView = UITableView()
     private var selectedCity: City?
     private var cities: [City]? {
         didSet {
-            self.tableView.reloadData()
+            tableView.reloadData()
         }
     }
 
@@ -30,13 +32,13 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "City Marks"
-        self.getCitiesData()
+        title = "City Mark"
+        getCitiesData()
+        setupTableView()
     }
 
     private func getCitiesData() {
-
-        self.viewModel?.onErrorHandling = { error in
+        viewModel?.onErrorHandling = { error in
             let alert = UIAlertController(title: "There was an issue",
                                           message: error.localizedDescription,
                                           preferredStyle: .alert)
@@ -47,41 +49,52 @@ class HomeViewController: UIViewController {
             self.present(alert, animated: true, completion: nil)
         }
 
-        self.viewModel?.onSuccess = { cities in
+        viewModel?.onSuccess = { cities in
             self.cities = cities
         }
 
-        self.viewModel?.getCitiesData()
-        self.setupTableView()
+        viewModel?.getCitiesData()
+        refreshControl.endRefreshing()
     }
 
     private func setupTableView() {
-        self.tableView.dataSource = self
-        self.tableView.delegate = self
-        self.tableView.register(UINib(nibName: "HeaderView", bundle: nil), forHeaderFooterViewReuseIdentifier: "HeaderView")
-        self.tableView.register(UINib(nibName: "MarksTableViewCell", bundle: nil), forCellReuseIdentifier: "ReusableTableCell")
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(UINib(nibName: "HeaderView", bundle: nil), forHeaderFooterViewReuseIdentifier: "HeaderView")
+        tableView.register(UINib(nibName: "MarksTableViewCell", bundle: nil), forCellReuseIdentifier: "ReusableTableCell")
 
-        self.tableView.separatorStyle = .none
+        tableView.separatorStyle = .none
 
         view.addSubview(tableView)
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
-        self.tableView.topAnchor.constraint(equalTo:view.topAnchor).isActive = true
-        self.tableView.leftAnchor.constraint(equalTo:view.leftAnchor).isActive = true
-        self.tableView.rightAnchor.constraint(equalTo:view.rightAnchor).isActive = true
-        self.tableView.bottomAnchor.constraint(equalTo:view.bottomAnchor).isActive = true
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.topAnchor.constraint(equalTo:view.topAnchor).isActive = true
+        tableView.leftAnchor.constraint(equalTo:view.leftAnchor).isActive = true
+        tableView.rightAnchor.constraint(equalTo:view.rightAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo:view.bottomAnchor).isActive = true
+
+        addRefreshControl()
+    }
+
+    private func addRefreshControl() {
+        refreshControl.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
+        tableView.refreshControl = refreshControl
+    }
+
+    @objc func refresh(_ sender: AnyObject) {
+        getCitiesData()
     }
 }
 
 extension HomeViewController: HeaderViewDelegate {
     func updateSelectedCity(city: City?) {
-        self.selectedCity = city
-        self.tableView.reloadData()
+        selectedCity = city
+        tableView.reloadData()
     }
 }
 
 extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.selectedCity?.marks.count ?? 0
+        return selectedCity?.marks.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -89,7 +102,7 @@ extension HomeViewController: UITableViewDataSource {
             return nil
         }
 
-        headerView.cities = self.cities
+        headerView.cities = cities
         headerView.delegate = self
         return headerView
     }
@@ -99,16 +112,20 @@ extension HomeViewController: UITableViewDataSource {
             return UITableViewCell()
         }
 
-        cell.mark = self.selectedCity?.marks[indexPath.row]
+        cell.mark = selectedCity?.marks[indexPath.row]
         return cell
     }
 }
 
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let markUIView = MarkUIView(cityName: self.cities?.first?.name ?? "",
-                                    countryName: self.cities?.first?.country ?? "",
-                                    mark: (self.cities?.first?.marks[indexPath.row])!)
+        guard let selectedCity else {
+            return
+        }
+
+        let markUIView = MarkUIView(cityName: selectedCity.name,
+                                    countryName: selectedCity.country,
+                                    mark: selectedCity.marks[indexPath.row])
         let hostingController = UIHostingController(rootView: markUIView)
         present(hostingController, animated: true, completion: nil)
     }
