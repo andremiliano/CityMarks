@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 struct MarkUIView: View {
+    @Environment(\.dismiss) var dismiss
     var cityName: String = ""
     var countryName: String = ""
     var mark: Mark
@@ -19,16 +20,19 @@ struct MarkUIView: View {
                 AsyncImage(url: URL(string: mark.image)) { image in
                     image.resizable()
                         .scaledToFit()
+                        .overlay(closeButton)
 
                 } placeholder: {
-                    Image("errorImage")
-                        .resizable()
+                    ProgressView()
+                          .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                          .scaleEffect(2.0, anchor: .center)
+                          .padding()
                 }
                 Text(mark.name)
                     .foregroundColor(.primary)
                     .font(.title)
                     .padding()
-                Text("\(self.cityName), \(self.countryName)")
+                Text("\(cityName), \(countryName)")
                     .foregroundColor(.primary)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -36,7 +40,7 @@ struct MarkUIView: View {
                     .foregroundColor(.primary)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                self.setUpMap
+                setUpMap
                 .padding()
                 .frame(width: 400, height: 300, alignment: .bottom)
             }
@@ -49,8 +53,8 @@ extension MarkUIView {
     var setUpMap: some View {
         Map(coordinateRegion: .constant(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: mark.latitude,
                                                                                           longitude: mark.longitude),
-                                                           span: MKCoordinateSpan(latitudeDelta: 0.008,
-                                                                                  longitudeDelta: 0.008))),
+                                                           span: MKCoordinateSpan(latitudeDelta: 0.01,
+                                                                                  longitudeDelta: 0.01))),
             interactionModes: .all,
             showsUserLocation: true,
             userTrackingMode: .constant(.follow),
@@ -58,6 +62,23 @@ extension MarkUIView {
                                            coordinate: .init(latitude: mark.latitude,
                                                              longitude: mark.longitude))]){ item in
             MapMarker(coordinate: item.coordinate, tint: .red)
+        }
+    }
+
+    var closeButton: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "xmark.circle")
+                        .padding(10)
+                        .foregroundColor(.black)
+                }
+            }
+            .padding(5)
+            Spacer()
         }
     }
 }
