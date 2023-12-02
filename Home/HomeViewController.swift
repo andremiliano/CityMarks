@@ -49,7 +49,6 @@ class HomeViewController: UIViewController {
 
         self.viewModel?.onSuccess = { cities in
             self.cities = cities
-            self.selectedCity = cities.first
         }
 
         self.viewModel?.getCitiesData()

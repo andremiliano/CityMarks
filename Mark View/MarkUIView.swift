@@ -28,11 +28,11 @@ struct MarkUIView: View {
                     .foregroundColor(.primary)
                     .font(.title)
                     .padding()
-                Text(self.cityName)
+                Text("\(self.cityName), \(self.countryName)")
                     .foregroundColor(.primary)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text(self.countryName)
+                Text(mark.description)
                     .foregroundColor(.primary)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -47,7 +47,16 @@ struct MarkUIView: View {
 
 extension MarkUIView {
     var setUpMap: some View {
-        Map(coordinateRegion: .constant(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: mark.latitude, longitude: mark.longitude), span: MKCoordinateSpan(latitudeDelta: 0.008, longitudeDelta: 0.008))), interactionModes: .all, showsUserLocation: true, userTrackingMode: .constant(.follow), annotationItems: [MarkLocation(name: mark.name, coordinate: .init(latitude: mark.latitude, longitude: mark.longitude))]){ item in
+        Map(coordinateRegion: .constant(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: mark.latitude,
+                                                                                          longitude: mark.longitude),
+                                                           span: MKCoordinateSpan(latitudeDelta: 0.008,
+                                                                                  longitudeDelta: 0.008))),
+            interactionModes: .all,
+            showsUserLocation: true,
+            userTrackingMode: .constant(.follow),
+            annotationItems: [MarkLocation(name: mark.name,
+                                           coordinate: .init(latitude: mark.latitude,
+                                                             longitude: mark.longitude))]){ item in
             MapMarker(coordinate: item.coordinate, tint: .red)
         }
     }

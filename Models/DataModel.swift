@@ -20,6 +20,7 @@ struct Mark: Decodable {
     let latitude: Double
     let longitude: Double
     let image: String
+    let description: String
 }
 
 struct MarkLocation: Identifiable {
