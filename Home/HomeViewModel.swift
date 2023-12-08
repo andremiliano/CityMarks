@@ -9,8 +9,7 @@ import Foundation
 
 class HomeViewModel: NSObject {
 
-    private var apiService: APIServiceProtocol
-
+    var apiService: APIServiceProtocol
     var selectedCity: City?
     var onSuccess : (([City]) -> Void)?
     var onErrorHandling : ((Error) -> Void)?

@@ -10,9 +10,10 @@ import CoreLocation
 import MapKit
 
 class MapViewModel: NSObject {
-    private var apiService: APIServiceProtocol
+
     private let locationManager = CLLocationManager()
 
+    var apiService: APIServiceProtocol
     var userLocation: CLLocationCoordinate2D?
     var onSuccess: (([Mark]) -> Void)?
     var onErrorHandling: ((Error) -> Void)?
