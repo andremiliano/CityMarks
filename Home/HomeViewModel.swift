@@ -9,21 +9,13 @@ import Foundation
 
 class HomeViewModel: NSObject {
 
-    private var apiService: APIService?
+    private var apiService = APIService.shared
 
+    var selectedCity: City?
     var onSuccess : (([City]) -> Void)?
     var onErrorHandling : ((Error) -> Void)?
 
-    override init() {
-        super.init()
-        apiService = APIService()
-    }
-
     func getCitiesData() {
-        guard let apiService else {
-            return
-        }
-
         apiService.getCityMarks { [weak self] result in
             switch result {
             case .success(let cities):
@@ -36,5 +28,25 @@ class HomeViewModel: NSObject {
                 }
             }
         }
+    }
+
+    func numberOfMarks() -> Int {
+        return selectedCity?.marks.count ?? 0
+    }
+
+    func didSelectCity(at index: Int) -> Mark? {
+        return selectedCity?.marks[index]
+    }
+
+    func cityName() -> String {
+        return selectedCity?.name ?? ""
+    }
+
+    func countryName() -> String {
+        return selectedCity?.country ?? ""
+    }
+
+    func selectedMark(at index: Int) -> Mark? {
+        return selectedCity?.marks[index]
     }
 }

@@ -72,5 +72,5 @@ class HeaderView: UITableViewHeaderFooterView {
 
         let cityName = sender.titleForSegment(at: selectedIndex) ?? ""
         selectCity(cityName)
-        }
+    }
 }

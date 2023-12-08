@@ -12,9 +12,8 @@ class HomeViewController: UIViewController {
 
     lazy var refreshControl = UIRefreshControl()
 
-    var viewModel: HomeViewModel?
+    var viewModel: HomeViewModel
     private let tableView = UITableView()
-    private var selectedCity: City?
     private var cities: [City]? {
         didSet {
             tableView.reloadData()
@@ -27,7 +26,7 @@ class HomeViewController: UIViewController {
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
@@ -38,23 +37,15 @@ class HomeViewController: UIViewController {
     }
 
     private func getCitiesData() {
-        viewModel?.onErrorHandling = { error in
-            let alert = UIAlertController(title: "There was an issue",
-                                          message: error.localizedDescription,
-                                          preferredStyle: .alert)
-
-            alert.addAction(UIAlertAction(title: "Ok",
-                                          style: .default))
-
-            self.present(alert, animated: true, completion: nil)
+        viewModel.onErrorHandling = { [weak self] error in
+            self?.showErrorAlert(with: error.localizedDescription)
         }
 
-        viewModel?.onSuccess = { cities in
-            self.cities = cities
+        viewModel.onSuccess = { [weak self] cities in
+            self?.cities = cities
         }
 
-        viewModel?.getCitiesData()
-        refreshControl.endRefreshing()
+        viewModel.getCitiesData()
     }
 
     private func setupTableView() {
@@ -75,26 +66,33 @@ class HomeViewController: UIViewController {
         addRefreshControl()
     }
 
+    private func showErrorAlert(with message: String) {
+        let alert = UIAlertController(title: "There was an issue", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+
     private func addRefreshControl() {
         refreshControl.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
         tableView.refreshControl = refreshControl
     }
 
     @objc func refresh(_ sender: AnyObject) {
-        getCitiesData()
+        tableView.reloadData()
+        refreshControl.endRefreshing()
     }
 }
 
 extension HomeViewController: HeaderViewDelegate {
     func updateSelectedCity(city: City?) {
-        selectedCity = city
+        viewModel.selectedCity = city
         tableView.reloadData()
     }
 }
 
 extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return selectedCity?.marks.count ?? 0
+        return viewModel.numberOfMarks()
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -112,21 +110,23 @@ extension HomeViewController: UITableViewDataSource {
             return UITableViewCell()
         }
 
-        cell.mark = selectedCity?.marks[indexPath.row]
+        cell.mark = viewModel.didSelectCity(at: indexPath.row)
         return cell
     }
 }
 
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let selectedCity else {
-            return
-        }
+        if let cityMark = viewModel.selectedMark(at: indexPath.row) {
+            let viewModel = MarkDetailViewModel (
+                mark: cityMark,
+                cityName: viewModel.cityName(),
+                countryName: viewModel.countryName()
+            )
 
-        let markUIView = MarkUIView(cityName: selectedCity.name,
-                                    countryName: selectedCity.country,
-                                    mark: selectedCity.marks[indexPath.row])
-        let hostingController = UIHostingController(rootView: markUIView)
-        present(hostingController, animated: true, completion: nil)
+            let markUIView = MarkUIView(viewModel: viewModel)
+            let hostingController = UIHostingController(rootView: markUIView)
+            present(hostingController, animated: true, completion: nil)
+        }
     }
 }
