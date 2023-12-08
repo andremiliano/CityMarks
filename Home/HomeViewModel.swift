@@ -9,11 +9,23 @@ import Foundation
 
 class HomeViewModel: NSObject {
 
-    private var apiService = APIService.shared
+    private var apiService: APIServiceProtocol
 
     var selectedCity: City?
     var onSuccess : (([City]) -> Void)?
     var onErrorHandling : ((Error) -> Void)?
+
+    var cityName: String {
+        return selectedCity?.name ?? ""
+    }
+
+    var countryName: String {
+        return selectedCity?.country ?? ""
+    }
+
+    init(apiService: APIServiceProtocol) {
+        self.apiService = apiService
+    }
 
     func getCitiesData() {
         apiService.getCityMarks { [weak self] result in
@@ -36,14 +48,6 @@ class HomeViewModel: NSObject {
 
     func didSelectCity(at index: Int) -> Mark? {
         return selectedCity?.marks[index]
-    }
-
-    func cityName() -> String {
-        return selectedCity?.name ?? ""
-    }
-
-    func countryName() -> String {
-        return selectedCity?.country ?? ""
     }
 
     func selectedMark(at index: Int) -> Mark? {

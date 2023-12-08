@@ -120,12 +120,12 @@ extension HomeViewController: UITableViewDelegate {
         if let cityMark = viewModel.selectedMark(at: indexPath.row) {
             let viewModel = MarkDetailViewModel (
                 mark: cityMark,
-                cityName: viewModel.cityName(),
-                countryName: viewModel.countryName()
+                cityName: viewModel.cityName,
+                countryName: viewModel.countryName
             )
 
-            let markUIView = MarkUIView(viewModel: viewModel)
-            let hostingController = UIHostingController(rootView: markUIView)
+            let markDetailUIView = MarkDetailUIView(viewModel: viewModel)
+            let hostingController = UIHostingController(rootView: markDetailUIView)
             present(hostingController, animated: true, completion: nil)
         }
     }

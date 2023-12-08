@@ -7,7 +7,11 @@
 
 import Foundation
 
-class APIService {
+protocol APIServiceProtocol {
+    func getCityMarks(completion: @escaping (Result<[City], Error>) -> Void)
+}
+
+class APIService: APIServiceProtocol {
 
     static let shared = APIService()
     private let sourcesURL = URL(string: "https://6563bf93ceac41c0761d1430.mockapi.io/Cities")

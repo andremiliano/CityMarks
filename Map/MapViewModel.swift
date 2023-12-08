@@ -10,14 +10,15 @@ import CoreLocation
 import MapKit
 
 class MapViewModel: NSObject {
-    private var apiService = APIService.shared
+    private var apiService: APIServiceProtocol
     private let locationManager = CLLocationManager()
 
     var userLocation: CLLocationCoordinate2D?
     var onSuccess: (([Mark]) -> Void)?
     var onErrorHandling: ((Error) -> Void)?
 
-    override init() {
+    init(apiService: APIServiceProtocol) {
+        self.apiService = apiService
         super.init()
         configureLocationManager()
     }
@@ -69,7 +70,7 @@ extension MapViewModel: CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Location manager failed with error: \(error.localizedDescription)")
+        print("Location manager failed: \(error.localizedDescription)")
     }
 }
 

@@ -8,9 +8,15 @@
 import UIKit
 
 class TabBarViewController: UITabBarController {
+    #if DEBUG
+        private let homeViewModel = HomeViewModel(apiService: MockAPIService())
+        private let mapViewModel = MapViewModel(apiService: MockAPIService())
+    #else
+        private let homeViewModel = HomeViewModel(apiService: APIService.shared)
+        private let mapViewModel = MapViewModel(apiService: APIService.shared)
+    #endif
+
     private var subViewControllers: [UINavigationController] = []
-    private let homeViewModel = HomeViewModel()
-    private let mapViewModel = MapViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
