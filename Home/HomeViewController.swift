@@ -62,24 +62,12 @@ class HomeViewController: UIViewController {
         tableView.leftAnchor.constraint(equalTo:view.leftAnchor).isActive = true
         tableView.rightAnchor.constraint(equalTo:view.rightAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo:view.bottomAnchor).isActive = true
-
-        addRefreshControl()
     }
 
     private func showErrorAlert(with message: String) {
         let alert = UIAlertController(title: "There was an issue", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
-    }
-
-    private func addRefreshControl() {
-        refreshControl.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
-        tableView.refreshControl = refreshControl
-    }
-
-    @objc func refresh(_ sender: AnyObject) {
-        tableView.reloadData()
-        refreshControl.endRefreshing()
     }
 }
 
